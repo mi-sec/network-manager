@@ -1,0 +1,47 @@
+{
+	"name": "app",
+	"version": "1.0.1",
+	"description": "app",
+	"main": "ecosystem.config.js",
+	"scripts": {
+		"clean": "npm outdated && npm prune",
+		"docs": "jsdoc -c jsdocs.js -r",
+		"lint": "eslint .",
+		"report": "nyc report",
+		"start": "pm2-runtime start ecosystem.config.js --env development",
+		"test": "nyc mocha"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/mi-sec/template-docker-full-stack-app.git"
+	},
+	"author": "MI-SEC",
+	"license": "MIT",
+	"directories": {
+		"config": "config",
+		"src": "src",
+		"test": "test"
+	},
+	"devDependencies": {
+		"chai": "^4.2.0",
+		"chai-http": "^4.3.0",
+		"eslint": "^7.6.0",
+		"jsdoc": "^3.6.5",
+		"mocha": "^8.1.1",
+		"nyc": "^15.1.0",
+		"postman-jsdoc-theme": "0.0.3"
+	},
+	"dependencies": {
+		"@hapi/joi": "^17.1.1",
+		"@mi-sec/lightmap": "^0.1.8",
+		"@pm2/io": "^4.3.5",
+		"config": "^3.3.1",
+		"cors": "^2.8.5",
+		"express": "^4.17.1",
+		"express-pino-logger": "^5.0.0",
+		"http-response-class": "^1.2.6",
+		"lodash.set": "^4.3.2",
+		"pino": "^6.5.0",
+		"pm2": "^4.4.0"
+	}
+}

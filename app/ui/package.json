@@ -1,0 +1,62 @@
+{
+	"name": "network-manager",
+	"version": "1.0.0",
+	"description": "Network management tool for SSHing into hosts",
+	"main": "src/main.js",
+	"scripts": {
+		"serve": "vue-cli-service serve",
+		"build": "vue-cli-service build",
+		"build-docker": "vue-cli-service build && [ -d build ] || mkdir build && mv dist/* build/",
+		"lint": "vue-cli-service lint"
+	},
+	"dependencies": {
+		"axios": "0.19.2",
+		"moment": "2.24.0",
+		"pino": "6.2.1",
+		"vue": "2.6.11",
+		"vuex": "3.2.0",
+		"vuex-router-sync": "5.0.0"
+	},
+	"devDependencies": {
+		"@babel/parser": "7.9.4",
+		"@mdi/font": "5.1.45",
+		"@vue/cli-plugin-babel": "4.3.1",
+		"@vue/cli-plugin-eslint": "4.3.1",
+		"@vue/cli-service": "4.3.1",
+		"babel-eslint": "8.0.1",
+		"eslint": "6.8.0",
+		"eslint-plugin-vue": "6.2.2",
+		"sass": "1.26.3",
+		"sass-loader": "8.0.2",
+		"vue-cli-plugin-vuetify": "2.0.5",
+		"vue-meta": "2.3.3",
+		"vue-router": "3.1.6",
+		"vue-template-compiler": "2.6.11",
+		"vuetify": "2.2.23",
+		"vuetify-loader": "1.4.3"
+	},
+	"postcss": {
+		"plugins": {
+			"autoprefixer": {}
+		}
+	},
+	"browserslist": [
+		"> 1%",
+		"last 2 versions"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/mi-sec/network-manager.git"
+	},
+	"keywords": [
+		"vue",
+		"dashboard",
+		"template"
+	],
+	"author": "MI-SEC",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/mi-sec/network-manager/issues"
+	},
+	"homepage": "https://github.com/mi-sec/network-manager#readme"
+}
