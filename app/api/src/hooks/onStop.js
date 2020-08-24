@@ -5,5 +5,9 @@
  *******************************************************************************************************/
 'use strict';
 
+const
+	state = require( '../services/state' );
+
 module.exports = async () => {
+	state.shuttingDown = true;
 };

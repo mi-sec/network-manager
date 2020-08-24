@@ -10,5 +10,17 @@ export default [
 		name: 'info',
 		view: 'Info',
 		meta: {}
+	},
+	{
+		path: '/ssh/:hostname',
+		name: 'ssh',
+		view: 'Ssh',
+		meta: {}
+	},
+	{
+		path: '/ssh/:hostname/:port(\\d+)',
+		name: 'ssh',
+		view: 'Ssh',
+		meta: {}
 	}
 ];

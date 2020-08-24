@@ -242,11 +242,13 @@ module.exports = {
 			}
 		],
 		'space-before-blocks': [ 1, 'always' ],
-		'space-before-function-paren': [ 1, {
-			anonymous: 'never',
-			named: 'never',
-			asyncArrow: 'always'
-		} ],
+		'space-before-function-paren': [
+			1, {
+				anonymous: 'never',
+				named: 'never',
+				asyncArrow: 'always'
+			}
+		],
 		'space-in-parens': [ 1, 'always' ],
 		'space-infix-ops': 1,
 		'space-unary-ops': [
@@ -288,7 +290,7 @@ module.exports = {
 				'vue/script-indent': [
 					'warn',
 					'tab',
-					{ baseIndent: 1 }
+					{ baseIndent: 0 }
 				]
 			}
 		}

@@ -10,12 +10,18 @@
 		"lint": "vue-cli-service lint"
 	},
 	"dependencies": {
+		"@fortawesome/fontawesome-svg-core": "^1.2.30",
+		"@fortawesome/free-solid-svg-icons": "^5.14.0",
+		"@mi-sec/lightmap": "^0.1.8",
 		"axios": "0.19.2",
 		"moment": "2.24.0",
 		"pino": "6.2.1",
+		"socket.io-client": "^2.3.0",
 		"vue": "2.6.11",
 		"vuex": "3.2.0",
-		"vuex-router-sync": "5.0.0"
+		"vuex-router-sync": "5.0.0",
+		"xterm": "^4.8.1",
+		"xterm-addon-fit": "^0.4.0"
 	},
 	"devDependencies": {
 		"@babel/parser": "7.9.4",

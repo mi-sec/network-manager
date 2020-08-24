@@ -6,7 +6,7 @@
 'use strict';
 
 const
-	UUIDv4 = require( 'uuid/v4' );
+	{ v4: UUIDv4 } = require( 'uuid' );
 
 /**
  * captureErrors
@@ -18,11 +18,11 @@ const
  * @param {function} next - next middleware function
  */
 function captureErrors( e, req, res, next ) {
-	req.log.trace( '[middleware] captureErrors', e );
+	req.log.info( '[middleware] captureErrors', e );
 
 	if ( e ) {
 		if ( res.finished || res._headerSent ) {
-			req.log.trace( '[middleware] captureErrors', 'captured dead request' );
+			req.log.info( '[middleware] captureErrors', 'captured dead request' );
 			return;
 		}
 

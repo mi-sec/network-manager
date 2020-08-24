@@ -13,5 +13,13 @@ export default {
 	footer: {
 		inset: false,
 		height: 26
+	},
+	api: {
+		protocol: 'http:',
+		hostname: 'localhost',
+		// pathname: '/api',
+		pathname: '/',
+		// port: 80
+		port: 3000
 	}
 };

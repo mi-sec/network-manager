@@ -7,9 +7,12 @@
 
 const
 	config           = require( 'config' ),
-	{ promises: fs } = require( 'fs' );
+	{ promises: fs } = require( 'fs' ),
+	state            = require( '../services/state' );
 
 module.exports = async () => {
+	state.shuttingDown = false;
+
 	try {
 		await fs.stat( config.get( 'storage' ) );
 	}

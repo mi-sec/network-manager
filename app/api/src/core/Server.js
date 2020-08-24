@@ -6,18 +6,23 @@
 'use strict';
 
 const
-	config      = require( 'config' ),
-	{ join }    = require( 'path' ),
-	express     = require( 'express' ),
-	cors        = require( 'cors' ),
-	bodyParser  = require( 'body-parser' ),
-	logger      = require( 'pino' )( {
+	config         = require( 'config' ),
+	{ join }       = require( 'path' ),
+	http           = require( 'http' ),
+	express        = require( 'express' ),
+	cors           = require( 'cors' ),
+	bodyParser     = require( 'body-parser' ),
+	expressSession = require( 'express-session' ),
+	logger         = require( 'pino' )( {
 		enabled: !process.env.TESTING,
 		level: process.env.NODE_ENV === 'production' ? 'error' : 'trace'
 	} ),
-	expressPino = require( 'express-pino-logger' );
+	expressPino    = require( 'express-pino-logger' ),
+	SocketIO       = require( 'socket.io' );
 
 const
+	state                    = require( '../services/state' ),
+	socket                   = require( '../services/socket' ),
 	setupRoute               = require( './setupRoute' ),
 	captureErrors            = require( './middleware/captureErrors' ),
 	recursivelyReadDirectory = require( '../utils/recursivelyReadDirectory' );
@@ -40,7 +45,7 @@ class Server
 	 */
 	bindProcess()
 	{
-		logger.trace( 'bindProcess' );
+		logger.info( 'bindProcess' );
 
 		// catch all the ways node might exit
 		process
@@ -60,9 +65,10 @@ class Server
 	 */
 	expressInitialize()
 	{
-		logger.trace( 'expressInitialize' );
+		logger.info( 'expressInitialize' );
 
-		this.app = express();
+		this.app    = express();
+		this.server = http.Server( this.app );
 
 		this.app.use( expressPino( { logger } ) );
 		this.app.set( 'trust proxy', 1 );
@@ -74,7 +80,28 @@ class Server
 		this.app.use( bodyParser.text() );
 		this.app.use( bodyParser.json() );
 
+		this.session = expressSession( config.get( 'ssh.session' ) );
+
 		this.app.use( '/docs', express.static( 'docs' ) );
+	}
+
+	socketInitialize()
+	{
+		const io = SocketIO(
+			this.server,
+			{
+				serveClient: false,
+				path: '/services/ssh/socket.io'
+			}
+		);
+
+		io.use( ( socket, next ) => {
+			( socket.request.res ) ?
+				this.session( socket.request, socket.request.res, next ) :
+				next( next );
+		} );
+
+		io.on( 'connection', socket );
 	}
 
 	/**
@@ -84,11 +111,14 @@ class Server
 	 */
 	hookRoute( item )
 	{
-		logger.trace( `hookRoute ${ item.method } ${ item.route }` );
+		logger.info( `hookRoute ${ item.method } ${ item.route }` );
 
 		// TODO::: add a hook to check for authentication if the handler file requires it
 		const exec = [
-			( req, res, next ) => ( this.meters.reqMeter.mark(), next() )
+			( req, res, next ) => ( this.meters.reqMeter.mark(), next() ),
+			( req, res, next ) => state.shuttingDown ?
+				res.status( 503 ).end( 'Service unavailable: Server shutting down' ) :
+				next()
 		];
 
 		setupRoute( item, exec );
@@ -101,7 +131,7 @@ class Server
 
 	routerInitialize()
 	{
-		logger.trace( 'routerInitialize' );
+		logger.info( 'routerInitialize' );
 
 		this.app.get( '/routes', ( req, res ) => {
 			const routes = this.app._router.stack
@@ -131,7 +161,7 @@ class Server
 
 	async loadRoutes()
 	{
-		logger.trace( 'loadRoutes' );
+		logger.info( 'loadRoutes' );
 
 		this.routes = await recursivelyReadDirectory( join( process.cwd(), 'src', 'routes' ) );
 		this.routes = this.routes.filter( ( route ) => /([a-z0-9\s_\\.\-():])+(.m?t?jsx?)$/i.test( route ) );
@@ -149,7 +179,7 @@ class Server
 	 */
 	async initialize()
 	{
-		logger.trace( 'initialize' );
+		logger.info( 'initialize' );
 
 		// override process handlers to handle failures
 		if ( !process.env.TESTING ) {
@@ -158,6 +188,10 @@ class Server
 
 		// setup express
 		this.expressInitialize();
+
+		// setup socket.io
+		this.socketInitialize();
+
 		await this.loadRoutes();
 		this.routerInitialize();
 	}
@@ -170,7 +204,7 @@ class Server
 	 */
 	onStart( cb )
 	{
-		logger.trace( 'onStart' );
+		logger.info( 'onStart' );
 
 		this.server = this.app.listen(
 			config.get( 'server.port' ),
@@ -198,7 +232,7 @@ class Server
 	 */
 	sensors( io )
 	{
-		logger.trace( 'sensors' );
+		logger.info( 'sensors' );
 
 		this.meters          = {};
 		this.meters.reqMeter = io.meter( 'req/min' );
@@ -214,7 +248,7 @@ class Server
 	 */
 	actuators( io )
 	{
-		logger.trace( 'actuators' );
+		logger.info( 'actuators' );
 
 		// TODO::: add system info as actuator
 		io.action( 'process', ( reply ) => reply( { env: process.env } ) );
@@ -231,7 +265,7 @@ class Server
 	 */
 	onStop( err, cb, code, signal )
 	{
-		logger.trace( 'onStop' );
+		logger.info( 'onStop' );
 
 		if ( this.server ) {
 			this.server.close();

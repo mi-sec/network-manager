@@ -6,7 +6,7 @@
 'use strict';
 
 const
-	UUIDv4 = require( 'uuid/v4' );
+	{ v4: UUIDv4 } = require( 'uuid' );
 
 /**
  * packet
@@ -17,7 +17,7 @@ const
  * @param {function} next - next middleware function
  */
 function packet( req, res, next ) {
-	req.log.trace( '[middleware] packet' );
+	req.log.info( '[middleware] packet' );
 
 	const id = UUIDv4();
 
