@@ -2,7 +2,8 @@ version: '3.8'
 
 networks:
   app_network:
-    driver: bridge
+#    driver: bridge
+    driver: host
 
 volumes:
   ui-build:
