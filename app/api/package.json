@@ -34,7 +34,7 @@
 	"dependencies": {
 		"@hapi/joi": "^17.1.1",
 		"@mi-sec/lightmap": "^0.1.8",
-		"@pm2/io": "^4.3.5",
+		"@pm2/io": "^5.0.0",
 		"config": "^3.3.1",
 		"cors": "^2.8.5",
 		"express": "^4.17.1",
@@ -42,6 +42,6 @@
 		"http-response-class": "^1.2.6",
 		"lodash.set": "^4.3.2",
 		"pino": "^6.5.0",
-		"pm2": "^4.4.0"
+		"pm2": "^5.2.0"
 	}
 }
